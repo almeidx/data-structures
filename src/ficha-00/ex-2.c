@@ -2,71 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../util/util.c"
+
 #define STRING_LENGTH 128
 #define FICHEIRO_MUSICAS "musicas.dat"
-
-typedef enum { false, true } bool;
-
-int readInt(int *n, char *msg) {
-  printf(msg);
-  scanf("%d", n);
-}
-
-float readFloat(float *n, char *msg) {
-  printf(msg);
-  scanf("%f", n);
-}
-
-void readString(char *str, char *msg) {
-  printf(msg);
-  scanf("%s", str);
-}
-
-char readChar(char *c, char *msg) {
-  printf(msg);
-  scanf("%c", c);
-}
-
-void readMatrix(int *matrix, int rows, int cols) {
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      printf("matriz[%d][%d]: ", i, j);
-      scanf("%d", &matrix[i * cols + j]);
-    }
-  }
-}
-
-void printMatrix(int *matrix, int rows, int cols) {
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      printf("%d ", matrix[i * cols + j]);
-    }
-    printf("\n");
-  }
-}
-
-/*
-  1. Desenvolva uma função que dada uma matriz bidimensional MxN de inteiros indique se é esparsa. Se a matriz for
-  esparsa é retornado 1 senão é retornado 0. Uma matriz é esparsa, se a percentagem de elementos nulos estiverem acima
-  de um determinado limite (percentagem).
- */
-int Esparsa(int *Matriz, int M, int N, float percentagem) {
-  int i, j, nulos = 0;
-
-  for (i = 0; i < M; i++) {
-    for (j = 0; j < N; j++) {
-      if (Matriz[i * N + j] == 0) {
-        nulos++;
-      }
-    }
-  }
-
-  if ((float)nulos / (M * N) > percentagem) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
 
 /*
   Pretende-se analisar um conjunto de músicas. Cada música caracteriza-se pelo título, intérprete, ano, single (1:sim ou
@@ -173,32 +112,8 @@ float gravaFichMusicas(MUSIC *lista, int n, int ano, char *nFich, char tpMeio) {
 }
 
 void main() {
-  // Exercicio 1
-  // int rows, cols;
-  // readInt(&rows, "Qual é o número de linhas da matriz?\n")
-  // readInt(&cols, "Qual é o número de colunas da matriz?\n")
-
-  // int *matrix = (int *)malloc(cols * rows * sizeof(int));
-
-  // float percentage;
-  // readFloat(&percentage, "Qual é a percentagem de elementos nulos?\n")
-
-  // readMatrix(matrix, rows, cols);
-
-  // printMatrix(matrix, rows, cols);
-
-  // if (Esparsa(matrix, rows, cols, 0.2)) {
-  //   printf("A matriz é esparsa\n");
-  // } else {
-  //   printf("A matriz não é esparsa\n");
-  // }
-
-  // free(matrix);
-
-  // Exercicio 2
   // a
-  int n;
-  readInt(&n, "Qual é o número de musicas?\n");
+  int n = readInt("Qual é o número de musicas?\n");
 
   MUSIC *musicas = (MUSIC *)malloc(n * sizeof(MUSIC));
 
@@ -207,8 +122,7 @@ void main() {
   }
 
   // b
-  int nDownloads;
-  readInt(&nDownloads, "Qual é o minimo de downloads?\n");
+  int nDownloads = readInt("Qual é o minimo de downloads?\n");
 
   musicasDownload(musicas, n, nDownloads);
 
@@ -219,13 +133,12 @@ void main() {
   printf("Há %d musicas com o interprete %s.\n", quantidadeDeInterprete(musicas, n, interprete), interprete);
 
   // d
-  int ano;
-  readInt(&ano, "Qual é o ano?\n");
+  int ano = readInt("Qual é o ano?\n");
 
   char single;
 
   do {
-    readChar(&single, "Singles (s), não singles (n), ou ambos (a)?");
+    single = readChar("Singles (s), não singles (n), ou ambos (a)?");
   } while (single != 's' && single != 'n' && single != 'a');
 
   printf("Número médio de downloads: %.2f", gravaFichMusicas(musicas, n, ano, FICHEIRO_MUSICAS, single));
