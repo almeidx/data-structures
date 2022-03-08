@@ -1,3 +1,3 @@
-void readMatrix(int *matrix, int rows, int cols);
+void read_matrix(int *matrix, int rows, int cols);
 
-void printMatrix(int *matrix, int rows, int cols);
+void print_matrix(int *matrix, int rows, int cols);

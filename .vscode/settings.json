@@ -8,5 +8,11 @@
   "C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "sameLine",
   "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
   "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
-  "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 2 }"
+  "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 2 }",
+  "files.associations": {
+    ".prettierrc": "json",
+    ".sequelizerc": "javascript",
+    "stdio.h": "c",
+    "util.h": "c"
+  }
 }

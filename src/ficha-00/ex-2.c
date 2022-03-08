@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "../util/util.c"
 
-#define STRING_LENGTH 128
 #define FICHEIRO_MUSICAS "musicas.dat"
 
 /*
@@ -27,7 +22,7 @@ typedef struct {
   int downloads;
 } MUSIC;
 
-void readMusic(MUSIC *music) {
+void read_music(MUSIC *music) {
   printf("Qual é o titulo da música?\n");
   scanf("%s", music->titulo);
 
@@ -49,7 +44,7 @@ void readMusic(MUSIC *music) {
   downloads (parâmetro numD).
   void musicasDownload(MUSIC *lista, int n, int numD)
 */
-void musicasDownload(MUSIC *lista, int n, int numD) {
+void musicas_download(MUSIC *lista, int n, int numD) {
   bool captionShown = false;
   for (int i = 0; i < n; i++) {
     if (lista[i].downloads > numD) {
@@ -66,7 +61,7 @@ void musicasDownload(MUSIC *lista, int n, int numD) {
 /*
   c) Desenvolva uma função que receba a listagem de músicas e devolva quantas têm um dado intérprete.
 */
-int quantidadeDeInterprete(MUSIC *lista, int n, char *interprete) {
+int quantidade_de_interprete(MUSIC *lista, int n, char *interprete) {
   int qnt = 0;
   for (int i = 0; i < n; i++) {
     if (!strcmp(lista[i].interprete, interprete)) {
@@ -86,10 +81,10 @@ int quantidadeDeInterprete(MUSIC *lista, int n, char *interprete) {
   FILE* fopen(const char* fileName, const char* mode);
   size_t fwrite (                                 const void* ptr, size_t size, size_t nElements, FILE* file);
 */
-float gravaFichMusicas(MUSIC *lista, int n, int ano, char *nFich, char tpMeio) {
-  FILE *f = fopen(nFich, "wb");
+float grava_ficheiro_musicas(MUSIC *lista, int n, int ano, char *nome_ficheiro, char tipo_medio) {
+  FILE *f = fopen(nome_ficheiro, "wb");
   if (f == NULL) {
-    printf("Erro ao abrir o ficheiro %s\n", nFich);
+    printf("Erro ao abrir o ficheiro %s\n", nome_ficheiro);
     return 0.0f;
   }
 
@@ -97,8 +92,8 @@ float gravaFichMusicas(MUSIC *lista, int n, int ano, char *nFich, char tpMeio) {
 
   for (int i = 0; i < n; i++) {
     if (lista[i].ano > ano) {
-      if (((tpMeio == 's' || tpMeio == 'a') && lista[i].single) ||
-          ((tpMeio == 'n' || tpMeio == 'a') && !lista[i].single)) {
+      if (((tipo_medio == 's' || tipo_medio == 'a') && lista[i].single) ||
+          ((tipo_medio == 'n' || tipo_medio == 'a') && !lista[i].single)) {
         fwrite(&lista[i].titulo, sizeof(MUSIC), 1, f);
         totalDownloads += lista[i].downloads;
         nMusicas++;
@@ -113,33 +108,33 @@ float gravaFichMusicas(MUSIC *lista, int n, int ano, char *nFich, char tpMeio) {
 
 void main() {
   // a
-  int n = readInt("Qual é o número de musicas?\n");
+  int n = read_int("Qual é o número de musicas?\n");
 
   MUSIC *musicas = (MUSIC *)malloc(n * sizeof(MUSIC));
 
   for (int i = 0; i < n; i++) {
-    readMusic(musicas + i);
+    read_music(musicas + i);
   }
 
   // b
-  int nDownloads = readInt("Qual é o minimo de downloads?\n");
+  int nDownloads = read_int("Qual é o minimo de downloads?\n");
 
-  musicasDownload(musicas, n, nDownloads);
+  musicas_download(musicas, n, nDownloads);
 
   // c;
   char interprete[STRING_LENGTH];
-  readString(interprete, "Qual é o nome do intérprete?\n");
+  read_string(interprete, "Qual é o nome do intérprete?\n");
 
-  printf("Há %d musicas com o interprete %s.\n", quantidadeDeInterprete(musicas, n, interprete), interprete);
+  printf("Há %d musicas com o interprete %s.\n", quantidade_de_interprete(musicas, n, interprete), interprete);
 
   // d
-  int ano = readInt("Qual é o ano?\n");
+  int ano = read_int("Qual é o ano?\n");
 
   char single;
 
   do {
-    single = readChar("Singles (s), não singles (n), ou ambos (a)?");
+    single = read_char("Singles (s), não singles (n), ou ambos (a)?");
   } while (single != 's' && single != 'n' && single != 'a');
 
-  printf("Número médio de downloads: %.2f", gravaFichMusicas(musicas, n, ano, FICHEIRO_MUSICAS, single));
+  printf("Número médio de downloads: %.2f", grava_ficheiro_musicas(musicas, n, ano, FICHEIRO_MUSICAS, single));
 }

@@ -1,7 +1,9 @@
-int readInt(char *msg);
+int read_int(char *msg);
 
-float readFloat(char *msg);
+float read_float(char *msg);
 
-char readChar(char *msg);
+char read_char(char *msg);
 
-void readString(char *str, char *msg);
+void read_string(char *str, char *msg);
+
+void clear_terminal();
