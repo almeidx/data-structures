@@ -12,10 +12,6 @@
   a) Defina o tipo de dados Indiv, Data e crie um vetor de nome ListIndiv para guardar a informação necessária para este
   estudo, supondo que se pretendem guardar nReg elementos, sendo nReg especificado pelo utilizador;
 */
-typedef struct Data {
-  int dia, mes, ano;
-} DATA;
-
 typedef struct Individuo {
   char cc[STRING_LENGTH];
   float altura, massa;

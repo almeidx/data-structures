@@ -13,6 +13,8 @@
     ".prettierrc": "json",
     ".sequelizerc": "javascript",
     "stdio.h": "c",
-    "util.h": "c"
+    "util.h": "c",
+    "stdlib.h": "c",
+    "data.h": "c"
   }
 }
