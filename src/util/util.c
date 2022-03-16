@@ -1,5 +1,3 @@
-#include "./util.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +5,10 @@
 #define STRING_LENGTH 128
 
 typedef enum { false, true } bool;
+
+typedef struct Data {
+  int dia, mes, ano;
+} DATE;
 
 int read_int(char *msg) {
   int n;
@@ -64,8 +66,12 @@ void rand_str(char *dest, size_t length) {
   *dest = '\0';
 }
 
-void rand_date(DATA date) {
-  date.dia = rand() % 31 + 1;
-  date.mes = rand() % 12 + 1;
-  date.ano = rand() % 2019 + 1;
+int rand_int(int min, int max) {
+  return rand() % (max + 1 - min) + min;
+}
+
+void rand_date(DATE *date) {
+  date->dia = rand_int(1, 31);
+  date->mes = rand_int(1, 12);
+  date->ano = rand_int(2010, 2022);
 }

@@ -17,7 +17,7 @@ typedef struct Individuo {
   float altura, massa;
   /* M/F */
   char genero;
-  DATA data_nascimento;
+  DATE data_nascimento;
 } INDIVIDUO;
 
 /*

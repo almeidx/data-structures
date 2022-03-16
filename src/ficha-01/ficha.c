@@ -1,5 +1,19 @@
 #include "../util/util.c"
-#include "./data.h"
+
+#define FICHEIRO_UTILIZADORES "utilizadores.dat"
+
+typedef struct {
+  char nome[50];
+  char utilizador[20];
+  char password[20];
+  float joia;
+  DATE data_registo;
+  char email[30];
+  char pagina_web_pessoal[50];
+  int telemovel;
+  int numero_acessos;
+  DATE data_ultimo_acesso;
+} REGISTO_UTILIZADORES;
 
 /*
   Implemente as seguintes funcionalidades, criando as funções com o nome indicado:
@@ -38,12 +52,12 @@ void generate_test_file(int n_utilizadores) {
     rand_str(utilizador.utilizador, 20);
     rand_str(utilizador.password, 20);
     utilizador.joia = (float)rand() / RAND_MAX * 100.0f;
-    rand_date(utilizador.data_registo);
+    rand_date(&utilizador.data_registo);
     rand_str(utilizador.email, 30);
     rand_str(utilizador.pagina_web_pessoal, 50);
-    utilizador.telemovel = rand() % 9999999999 + 1;
-    utilizador.numero_acessos = rand() % 100 + 1;
-    rand_date(utilizador.data_ultimo_acesso);
+    utilizador.telemovel = rand_int(900000000, 999999999);
+    utilizador.numero_acessos = rand_int(1, 200);
+    rand_date(&utilizador.data_ultimo_acesso);
 
     fwrite(&utilizador, sizeof(REGISTO_UTILIZADORES), 1, f);
   }
@@ -150,48 +164,119 @@ int mes_mais_acessos(REGISTO_UTILIZADORES *utilizadores, int n_utilizadores) {
   return mes_mais_acessos;
 }
 
+bool verify_loaded_data(bool loaded_data) {
+  if (!loaded_data) {
+    printf("Por favor, selecione uma opção de carregar os dados antes de utilizar esta opção.\n");
+  }
+  return loaded_data;
+}
+
 void main() {
-  // 1.
-  int n_utilizadores = read_int("Número de utilizadores: ");
-  REGISTO_UTILIZADORES *utilizadores = malloc(sizeof(REGISTO_UTILIZADORES) * n_utilizadores);
+  int option, n_utilizadores;
+  REGISTO_UTILIZADORES *utilizadores;
+  bool leave = false, has_loaded_data = false;
 
-  generate_test_file(n_utilizadores);
+  while (true) {
+    do {
+      printf(
+          "O que deseja fazer?\n"
+          " 1. gerar dados de teste\n"
+          " 2. ler dados de ficheiro\n"
+          " 3. ordenar dados\n"
+          " 4. listar utilizadores\n"
+          " 5. nº de acessos\n"
+          " 6. pesquisar por utilizador\n"
+          " 7. utilizador com mais acessos\n"
+          " 8. total de joias\n"
+          " 9. mês com mais acessos\n"
+          " 0. sair\n");
+      scanf("%d", &option);
+    } while (option < 0 || option > 9);
 
-  ler_ficheiro(utilizadores, n_utilizadores);
+    clear_terminal();
 
-  // 2.
-  char sorting_order;
-  do {
-    sorting_order = read_char("Ordenar por ordem crescente (a) ou decrescente (d)? ");
-  } while (sorting_order != 'a' && sorting_order != 'd');
+    switch (option) {
+      case 0:
+        leave = true;
+        break;
 
-  ordenar_dados(utilizadores, n_utilizadores, sorting_order);
+      case 1:
+        n_utilizadores = rand_int(400, 700);
+        generate_test_file(n_utilizadores);
 
-  // 4.
-  listar_utilizadores(utilizadores, n_utilizadores);
+        utilizadores = (REGISTO_UTILIZADORES *)malloc(n_utilizadores * sizeof(REGISTO_UTILIZADORES));
+        ler_ficheiro(utilizadores, n_utilizadores);
 
-  // 6.
-  int ano_minimo = read_int("Ano mínimo: ");
-  numero_de_acessos_no_ano(utilizadores, n_utilizadores, ano_minimo);
+        has_loaded_data = true;
+        break;
 
-  // 8.
-  char nome[STRING_LENGTH];
-  read_string(nome, "Nome do utilizador que quer pesquisar: ");
+      case 2:
+        n_utilizadores = read_int("Número de utilizadores: ");
+        utilizadores = (REGISTO_UTILIZADORES *)malloc(n_utilizadores * sizeof(REGISTO_UTILIZADORES));
 
-  REGISTO_UTILIZADORES utilizador = pesquisar_nome(utilizadores, n_utilizadores, nome);
+        ler_ficheiro(utilizadores, n_utilizadores);
 
-  printf("Utilizador: %s\n.", utilizador.utilizador);
+        has_loaded_data = true;
+        break;
 
-  // 9.
-  REGISTO_UTILIZADORES _utilizador_mais_acessos = utilizador_mais_acessos(utilizadores, n_utilizadores);
-  printf("O utilizador com mais acessos é '%s' e com %d acessos.\n", _utilizador_mais_acessos.utilizador,
-         _utilizador_mais_acessos.numero_acessos);
+      case 3:
+        if (!verify_loaded_data(has_loaded_data)) continue;
 
-  // 10.
-  printf("O total de joias é %.2f.\n", total_joias(utilizadores, n_utilizadores));
+        char sorting_order;
+        do {
+          sorting_order = read_char("Ordenar por ordem crescente (a) ou decrescente (d)? ");
+        } while (sorting_order != 'a' && sorting_order != 'd');
 
-  // 11.
-  printf("O mês com mais acessos é %d.\n", mes_mais_acessos(utilizadores, n_utilizadores));
+        ordenar_dados(utilizadores, n_utilizadores, sorting_order);
+        break;
+
+      case 4:
+        if (!verify_loaded_data(has_loaded_data)) continue;
+
+        listar_utilizadores(utilizadores, n_utilizadores);
+        break;
+
+      case 5:
+        if (!verify_loaded_data(has_loaded_data)) continue;
+
+        int ano_minimo = read_int("Ano mínimo: ");
+        numero_de_acessos_no_ano(utilizadores, n_utilizadores, ano_minimo);
+
+      case 6:
+        if (!verify_loaded_data(has_loaded_data)) continue;
+
+        char nome[STRING_LENGTH];
+        read_string(nome, "Nome do utilizador que quer pesquisar: ");
+
+        REGISTO_UTILIZADORES utilizador = pesquisar_nome(utilizadores, n_utilizadores, nome);
+
+        printf("Utilizador: %s\n.", utilizador.utilizador);
+        break;
+
+      case 7:
+        if (!verify_loaded_data(has_loaded_data)) continue;
+
+        REGISTO_UTILIZADORES _utilizador_mais_acessos = utilizador_mais_acessos(utilizadores, n_utilizadores);
+
+        printf("O utilizador com mais acessos é '%s' e com %d acessos.\n", _utilizador_mais_acessos.utilizador,
+               _utilizador_mais_acessos.numero_acessos);
+        break;
+
+      case 8:
+        if (!verify_loaded_data(has_loaded_data)) continue;
+
+        printf("O total de joias é %.2f.\n", total_joias(utilizadores, n_utilizadores));
+        break;
+
+      case 9:
+        if (!verify_loaded_data(has_loaded_data)) continue;
+
+        printf("O mês com mais acessos é %d.\n", mes_mais_acessos(utilizadores, n_utilizadores));
+        break;
+    }
+
+    if (leave) break;
+  }
 
   free(utilizadores);
 }
