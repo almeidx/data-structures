@@ -12,7 +12,7 @@ LIST *create_list() {
   return list;
 }
 
-void prepend_to_list(LIST *l, VEHICLE *v) {
+void prepend_to_list(LIST *list, VEHICLE *v) {
   NODE *new_node = (NODE *)malloc(sizeof(NODE));
   new_node->vehicle = v;
   new_node->next = l->head;
@@ -21,7 +21,7 @@ void prepend_to_list(LIST *l, VEHICLE *v) {
 }
 
 extern void print_vehicle(VEHICLE *v);
-void show_list(LIST *l) {
+void show_list(LIST *list) {
   NODE *current = l->head;
   while (current != NULL) {
     print_vehicle(current->vehicle);
@@ -30,7 +30,7 @@ void show_list(LIST *l) {
   }
 }
 
-void free_list(LIST *l) {
+void free_list(LIST *list) {
   NODE *current = l->head;
   while (current != NULL) {
     NODE *next = current->next;
@@ -41,7 +41,7 @@ void free_list(LIST *l) {
   free(l);
 }
 
-VEHICLE *search_chassi(LIST *l, int chassi) {
+VEHICLE *search_chassi(LIST *list, int chassi) {
   NODE *current = l->head;
   while (current != NULL) {
     if (current->vehicle->chassi == chassi) {

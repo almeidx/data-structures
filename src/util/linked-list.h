@@ -16,9 +16,9 @@ typedef struct {
 } LIST;
 
 LIST *create_list();
-void prepend_to_list(LIST *l, VEHICLE *v);
-void show_list(LIST *l);
-void free_list(LIST *l);
-VEHICLE *search_chassi(LIST *l, int chassi);
+void prepend_to_list(LIST *list, VEHICLE *v);
+void show_list(LIST *list);
+void free_list(LIST *list);
+VEHICLE *search_chassi(LIST *list, int chassi);
 
 #endif  // _LINKED_LIST_INCLUDED
