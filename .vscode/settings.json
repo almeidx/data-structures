@@ -14,6 +14,7 @@
     ".sequelizerc": "javascript",
     "stdio.h": "c",
     "stdlib.h": "c",
-    "linked-list.h": "c"
+    "linked-list.h": "c",
+    "data.h": "c"
   }
 }

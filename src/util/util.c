@@ -41,10 +41,10 @@ void clear_terminal() {
   system("@cls||clear");
 }
 
-FILE *open_file(char *fileName, char *mode) {
-  FILE *f = fopen(fileName, mode);
+FILE *open_file(char *filename, char *mode) {
+  FILE *f = fopen(filename, mode);
   if (f == NULL) {
-    printf("Erro ao abrir o ficheiro %s\n", fileName);
+    printf("Erro ao abrir o ficheiro %s\n", filename);
     exit(EXIT_FAILURE);
   }
 
