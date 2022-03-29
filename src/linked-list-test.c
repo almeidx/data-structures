@@ -5,8 +5,8 @@
 
 void print_vehicle(VEHICLE *v) {
   printf("Vehicle:\n");
-  printf("  Chassi: %d\n", v->chassi);
-  printf("  Year: %d\n", v->year);
+  printf("\tChassi: %d\n", v->chassi);
+  printf("\tYear: %d\n", v->year);
 }
 
 VEHICLE *create_vehicle(int chassi, int year) {
@@ -22,7 +22,7 @@ void main() {
 
   prepend_to_list(list, vehicle);
 
-  show_list(list);
+  show_list_func_arg(list, print_vehicle);
 
   search_chassi(list, 1111);
 
