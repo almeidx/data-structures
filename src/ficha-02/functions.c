@@ -69,7 +69,7 @@ void append_to_list(LIST *list, NODE *node) {
   list->size++;
 }
 
-// 10, 11
+// 10. & 11.
 int compare_nodes(NODE *a, NODE *b) {
   return strcmp(a->word->text, b->word->text);
 }
@@ -191,7 +191,7 @@ int remove_word(LIST *list, char *text) {
 }
 
 // 18.
-int remove_first_word(LIST *list) {
+int remove_first_node(LIST *list) {
   if (!list->head) return 0;
 
   NODE *node = list->head;
@@ -204,7 +204,7 @@ int remove_first_word(LIST *list) {
 }
 
 // 19.
-int remove_last_word(LIST *list) {
+int remove_last_node(LIST *list) {
   if (!list->head) return 0;
 
   NODE *current = list->head;
@@ -234,7 +234,7 @@ void print_word(WORD *word) {
 }
 
 // 21.
-void show_list(LIST *list) {
+void print_list(LIST *list) {
   NODE *current = list->head;
 
   printf("Language: %s\n", list->language);
@@ -247,29 +247,44 @@ void show_list(LIST *list) {
 }
 
 // 22.
-void show_list_reversed_recursive(LIST *list, NODE *current) {
+void print_list_reversed_recursive(LIST *list, NODE *current) {
   if (current == NULL) {
     return;
   }
-  show_list_reversed_recursive(list, current->next);
+
+  print_list_reversed_recursive(list, current->next);
   print_word(current->word);
 }
 
-// 23.
-void show_list_reversed_iterative(LIST *list) {
+NODE *get_previous_node(LIST *list, NODE *node) {
   NODE *current = list->head;
-  NODE *previous = NULL;
 
   while (current != NULL) {
-    NODE *next = current->next;
-    current->next = previous;
-    previous = current;
-    current = next;
+    if (current->next == node) {
+      return current;
+    }
+
+    current = current->next;
   }
 
-  list->head = previous;
+  return NULL;
+}
 
-  show_list(list);
+// 23.
+void print_list_reversed(LIST *list) {
+  if (!list->size) return;
+
+  NODE *current = list->head, *prev;
+
+  // get last node
+  while (current->next) {
+    current = current->next;
+  }
+
+  do {
+    print_word(current->word);
+    current = get_previous_node(list, current);
+  } while (current);
 }
 
 // 24.
@@ -331,17 +346,24 @@ NODE *search_word(LIST *list, char *text) {
   return NULL;
 }
 
-// 27.
-// Returns 2 if the list has been freed, 1 if the user wants to leave, 0 otherwise
-int menu(LIST *list) {
-  clear_terminal();
+void wait_for_continue() {
+  flush_stdin();
 
-  int option;
+  printf("\n\nPress ENTER to continue...");
+  getchar();
+}
+
+// 27.
+// Returns 2 if the list has been freed, 1 if the user wants to exit, 0 otherwise
+int menu(LIST *list) {
+  int option, should_wait_for_continue = 1;
 
   do {
+    flush_stdin();
+
     printf(
-        "(1) Inserir um novo elemento na lista\n"
-        "(2) Retirar elementos da lista (ir para o sub menu)\n"
+        "(1) Inserir elementos\n"
+        "(2) Retirar elementos\n"
         "(3) Mostrar os elementos pela ordem actual\n"
         "(4) Mostrar os elementos pela ordem inversa\n"
         "(5) Mostrar o numero de elementos da lista\n"
@@ -356,40 +378,35 @@ int menu(LIST *list) {
 
   switch (option) {
     case 1: {
-      char text[MAX_WORD_LENGTH];
-      read_string(text, "Insira a nova palavra: ");
-
-      NODE *node = create_node();
-      node->word = create_word(text);
-
-      int pos;
+      int res;
 
       do {
-        pos = read_int("Deseja inserir o elemento ao inicio (0) ou ao fim (1): ");
-      } while (pos != 0 && pos != 1);
+        clear_terminal();
+        res = add_menu(list);
+      } while (res != 1);
 
-      if (pos) {
-        append_to_list(list, node);
-      } else {
-        prepend_to_list(list, node);
-      }
-
-      printf("Palavra '%s' adicionada à lista com sucesso.\n", text);
+      should_wait_for_continue = 0;
       break;
     }
 
-    case 2:
-      if (menu_to_remove(list)) {
-        return 2;
-      }
+    case 2: {
+      int res;
+
+      do {
+        clear_terminal();
+        res = remove_menu(list);
+      } while (res == 0);
+
+      should_wait_for_continue = 0;
       break;
+    }
 
     case 3:
-      show_list(list);
+      print_list(list);
       break;
 
     case 4:
-      show_list_reversed_iterative(list);
+      print_list_reversed(list);
       break;
 
     case 5:
@@ -438,6 +455,10 @@ int menu(LIST *list) {
       char filename[MAX_WORD_LENGTH];
       read_string(filename, "Insira o nome do ficheiro de texto do qual quer importar: ");
 
+      if (list->size > 0) {
+        free_list(list);
+      }
+
       if (!read_list_from_file(list, filename)) {
         printf("Ocorreu um erro ao importar a lista do ficheiro.\n");
       } else {
@@ -451,46 +472,156 @@ int menu(LIST *list) {
       return 1;
   }
 
+  if (should_wait_for_continue) {
+    wait_for_continue();
+  }
+
   return 0;
 }
 
 // 28.
-// Returns 2 if the list has been freed, 1 if a single element was removed, 0 otherwise
-int menu_to_remove(LIST *list) {
+// Returns 2 if the list has been destroyed, 1 if the user wants to go back, 0 otherwise
+int remove_menu(LIST *list) {
   int option;
 
   do {
+    flush_stdin();
+
     printf(
-        "(10) Retirar o primeiro elemento"
-        "(11) Retirar um elemento especificado pelo utilizador"
-        "(12) Retirar o último elemento"
-        "(13) Destruir a lista de elementos"
-        "(00) VOLTAR ao Menu Principal");
+        "(10) Retirar o primeiro elemento\n"
+        "(11) Retirar um elemento\n"
+        "(12) Retirar o ultimo elemento\n"
+        "(13) Destruir a lista\n"
+        "(00) VOLTAR ao menu principal\n");
 
     scanf("%d", &option);
   } while (option != 0 && (option < 10 || option > 13));
 
   switch (option) {
     case 10:
-      return remove_first_word(list);
+      remove_first_node(list);
+      break;
 
     case 11: {
       char text[MAX_WORD_LENGTH];
       read_string(text, "Insira o texto da palavra que deseja remover: ");
 
-      return remove_word(list, text);
+      remove_word(list, text);
+      break;
     }
 
     case 12:
-      return remove_last_word(list);
+      remove_last_node(list);
+      break;
 
     case 13:
       free_list(list);
-      return 1;
+      return 2;
 
     case 0:
-      break;
+      return 1;
   }
 
   return 0;
+}
+
+// 29. Returns 1 if the user wants to go back, 0 otherwise
+int add_menu(LIST *list) {
+  int option;
+
+  do {
+    flush_stdin();
+
+    printf(
+        "(1) Inserir elemento no inicio\n"
+        "(2) Inserir elemento no fim\n"
+        "(3) Reordenar lista\n"
+        "(0) VOLTAR ao menu principal\n");
+
+    scanf("%d", &option);
+  } while (option < 0 || option > 3);
+
+  switch (option) {
+    case 1: {
+      char text[MAX_WORD_LENGTH];
+      read_string(text, "Insira o texto da palavra que deseja inserir: ");
+
+      NODE *node = create_node();
+      node->word = create_word(text);
+
+      prepend_to_list(list, node);
+
+      printf("Palavra '%s' adicionada ao início da lista com sucesso.\n", text);
+      break;
+    }
+
+    case 2: {
+      char text[MAX_WORD_LENGTH];
+      read_string(text, "Insira o texto da palavra que deseja inserir: ");
+
+      NODE *node = create_node();
+      node->word = create_word(text);
+
+      append_to_list(list, node);
+
+      printf("Palavra '%s' adicionada ao fim da lista com sucesso.\n", text);
+      break;
+    }
+
+    case 3:
+      fast_bubble_sort_list(list);
+      break;
+
+    case 0:
+      return 1;
+  }
+
+  return 0;
+}
+
+void swap_nodes(NODE *a, NODE *b) {
+  WORD *temp = a->word;
+  a->word = b->word;
+  b->word = temp;
+}
+
+// 30.
+void bubble_sort_list(LIST *list) {
+  NODE *current;
+
+  if (list->head == NULL) return;
+
+  do {
+    current = list->head;
+
+    while (current->next != NULL) {
+      if (compare_nodes(current, current->next) > 0) {
+        swap_nodes(current, current->next);
+      }
+
+      current = current->next;
+    }
+  } while (current->next != NULL);
+}
+
+// 30. "pro"
+void fast_bubble_sort_list(LIST *list) {
+  int swapped;
+  NODE *current;
+
+  if (list->head == NULL) return;
+
+  do {
+    swapped = 0;
+    current = list->head;
+
+    while (current->next != NULL) {
+      if (compare_nodes(current, current->next) > 0) {
+        swap_nodes(current, current->next);
+        swapped = 1;
+      }
+
+      current = current->next;
+    }
+  } while (swapped);
 }

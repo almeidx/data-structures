@@ -41,6 +41,10 @@ void clear_terminal() {
   system("@cls||clear");
 }
 
+void flush_stdin() {
+  fflush(stdin);
+}
+
 FILE *open_file(char *filename, char *mode) {
   FILE *f = fopen(filename, mode);
   if (f == NULL) {

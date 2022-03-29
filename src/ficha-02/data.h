@@ -34,18 +34,22 @@ NODE *recursive_search(LIST *list, NODE *node, NODE *current);
 int amount_of_repeated_words(LIST *list);
 void free_node(NODE *node);
 int remove_word(LIST *list, char *text);
-int remove_first_word(LIST *list);
-int remove_last_word(LIST *list);
+int remove_first_node(LIST *list);
+int remove_last_node(LIST *list);
 void print_word(WORD *word);
-void show_list(LIST *list);
-void show_list_reversed_recursive(LIST *list, NODE *current);
-void show_list_reversed_iterative(LIST *list);
+void print_list(LIST *list);
+void print_list_reversed_recursive(LIST *list, NODE *current);
+void print_list_reversed(LIST *list);
 void free_list(LIST *list);
 int export_list_to_file(LIST *list, char *filename);
 int read_list_from_file(LIST *list, char *filename);
 
 NODE *search_word(LIST *list, char *text);
 int menu(LIST *list);
-int menu_to_remove(LIST *list);
+int remove_menu(LIST *list);
+int add_menu(LIST *list);
+
+void bubble_sort_list(LIST *list);
+void fast_bubble_sort_list(LIST *list);
 
 #endif  // _INCLUDED_DATA_H
