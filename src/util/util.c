@@ -1,3 +1,6 @@
+#ifndef UTIL_C_INCLUDED
+#define UTIL_C_INCLUDED
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,10 +8,6 @@
 #define STRING_LENGTH 128
 
 typedef enum { false, true } bool;
-
-typedef struct Data {
-  int dia, mes, ano;
-} DATE;
 
 int read_int(char *msg) {
   int n;
@@ -75,7 +74,9 @@ int rand_int(int min, int max) {
 }
 
 void rand_date(DATE *date) {
-  date->dia = rand_int(1, 31);
-  date->mes = rand_int(1, 12);
-  date->ano = rand_int(2010, 2022);
+  date->day = rand_int(1, 31);
+  date->month = rand_int(1, 12);
+  date->year = rand_int(2010, 2022);
 }
+
+#endif  // UTIL_C_INCLUDED
