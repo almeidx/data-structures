@@ -3,8 +3,13 @@
 #include "../util/date.c"
 #include "../util/util.c"
 
+/*
+  3. Escreva uma função que faça o registo dos dados relativos a um contentor que chega ao armazém. Esta função deve
+  inserir a data do sistema.
+*/
 CONTAINER *create_container() {
   CONTAINER *c = (CONTAINER *)malloc(sizeof(CONTAINER));
+  if (!c) return NULL;
 
   read_string(c->content, "Insira o conteudo do contentor: ");
   read_string(c->client, "Insira o nome do cliente do contentor: ");
@@ -17,6 +22,9 @@ CONTAINER *create_container() {
   return c;
 }
 
+/*
+  4. Escreva uma função que permita visualizar os dados relativos aos contentores que se encontram em armazém.
+*/
 void show_container(CONTAINER *c) {
   printf("Contentor:\n");
   printf("\tConteudo: %s\n", c->content);

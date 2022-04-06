@@ -5,6 +5,10 @@
 #include <time.h>
 #endif  // time
 
+#ifndef malloc
+#include <stdlib.h>
+#endif  // malloc
+
 typedef struct Date {
   int day, month, year;
 } DATE;
