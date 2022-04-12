@@ -64,30 +64,26 @@ void enqueue(QUEUE *queue, VEHICLE *vehicle) {
   9. Escreva uma função que permita retirar uma viatura da fila de espera, mas que antes preencha o tempo de saída e
   calcule o tempo de lavagem para mostrar ao utilizador.
 */
-VEHICLE *dequeue(QUEUE *queue, VEHICLE *vehicle) {
-  if (!queue || !queue->head) return NULL;
+VEHICLE *dequeue(QUEUE *queue) {
+  if (!queue || !queue->head) return;
 
-  NODE *current = queue->head;
-  while (current) {
-    if (compare_vehicles(current->vehicle, vehicle)) {
-      vehicle->left_at = time(NULL);
-      vehicle->wash_time = get_wash_time(vehicle);
-      break;
-    }
-    current = current->next;
-  }
+  NODE *head = queue->head;
 
-  if (!current) return NULL;
+  head->vehicle->left_at = time(NULL);
+  head->vehicle->wash_time = get_wash_time(head->vehicle);
 
-  if (compare_vehicles(queue->head->vehicle, queue->tail->vehicle)) {
-    queue->head = queue->tail = NULL;
-  } else {
-    queue->head = queue->head->next;
+  VEHICLE *vehicle = head->vehicle;
+
+  queue->head = queue->head->next;
+
+  free(head);
+
+  if (queue->size == 1) {
+    queue->tail = queue->head;
   }
 
   queue->size--;
-
-  return current->vehicle;
+  return vehicle;
 }
 
 /*
@@ -206,17 +202,9 @@ int menu(QUEUE *queue) {
       break;
 
     case 2: {
-      char plate[MAX_PLATE];
-      read_string(plate, "Insira a matricula do veiculo que quer remover: ");
-
-      VEHICLE *vehicle = find_vehicle_by_plate(queue, plate);
-      if (!vehicle) {
-        printf("Nao existe nenhum veiculo com a matricula %s.\n", plate);
-        break;
-      }
-
-      vehicle = dequeue(queue, vehicle);
+      VEHICLE *vehicle = dequeue(queue);
       printf("O veiculo %s ficou %d segundos a lavar.\n", vehicle->plate, get_wash_time(vehicle));
+      destroy_vehicle(vehicle);
       break;
     }
 
