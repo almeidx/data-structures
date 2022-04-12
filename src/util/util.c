@@ -7,6 +7,12 @@
 
 #define STRING_LENGTH 128
 
+#ifndef DATE
+typedef struct Date {
+  int day, month, year;
+} DATE;
+#endif  // DATE
+
 typedef enum { false, true } bool;
 
 int read_int(char *msg) {

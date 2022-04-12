@@ -9,9 +9,11 @@
 #include <stdlib.h>
 #endif  // malloc
 
+#ifndef DATE
 typedef struct Date {
   int day, month, year;
 } DATE;
+#endif  // DATE
 
 DATE *get_current_date() {
   DATE *date = (DATE *)malloc(sizeof(DATE));
