@@ -9,7 +9,7 @@ void main() {
   c = create_car("Audi", 2019);
   add_to_list(list, c);
   show_list(list, show_car);
-  detroy_list(list, destroy_car);
+  destroy_list(list, destroy_car);
 
   printf("\n");
 
@@ -19,7 +19,7 @@ void main() {
   p = create_product("Legion 5 Pro", 1300.0f, 26);
   add_to_list(list, p);
   show_list(list, show_product);
-  detroy_list(list, destroy_product);
+  destroy_list(list, destroy_product);
 }
 
 CAR *create_car(char *make, int year) {

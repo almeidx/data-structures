@@ -43,7 +43,7 @@ void show_list(LIST *list, void (*show_item)(void *)) {
   printf("\n");
 }
 
-void detroy_list(LIST *list, void (*destroy_item)(void *)) {
+void destroy_list(LIST *list, void (*destroy_item)(void *)) {
   if (!list) return;
 
   NODE *current = list->head, *next;

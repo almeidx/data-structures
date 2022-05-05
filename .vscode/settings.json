@@ -19,6 +19,7 @@
     "stack.h": "c",
     "generic-list-test.h": "c",
     "vehicle.h": "c",
-    "type_traits": "c"
+    "type_traits": "c",
+    "generic-list.h": "c"
   }
 }
