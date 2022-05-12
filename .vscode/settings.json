@@ -21,5 +21,6 @@
     "vehicle.h": "c",
     "type_traits": "c",
     "generic-list.h": "c"
-  }
+  },
+  "cSpell.words": ["inorder"]
 }
