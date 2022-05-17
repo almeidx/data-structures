@@ -31,6 +31,34 @@ void add_to_list(LIST *list, void *data) {
   list->size++;
 }
 
+void *remove_from_list(LIST *list, void *data, int (*compare)(void *, void *)) {
+  if (!list) return;
+
+  NODE *current = list->head, *previous = NULL;
+
+  while (current) {
+    if (compare(current->data, data)) {
+      if (previous) {
+        previous->next = current->next;
+      } else {
+        list->head = current->next;
+      }
+
+      list->size--;
+
+      void *data = current->data;
+      free(current);
+
+      return data;
+    }
+
+    previous = current;
+    current = current->next;
+  }
+
+  return NULL;
+}
+
 void show_list(LIST *list, void (*show_item)(void *)) {
   if (!list) return;
 
@@ -57,4 +85,18 @@ void destroy_list(LIST *list, void (*destroy_item)(void *)) {
   }
 
   free(list);
+}
+
+void *search_list(LIST *list, void *data, int (*compare)(void *, void *)) {
+  if (!list) return NULL;
+
+  NODE *current = list->head;
+  while (current) {
+    if (compare(current->data, data)) {
+      return current->data;
+    }
+    current = current->next;
+  }
+
+  return NULL;
 }
