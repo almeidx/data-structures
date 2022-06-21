@@ -1,6 +1,6 @@
 #include "generic-list-test.h"
 
-#include "./util/generic-list.c"
+#include "../structures/generic-list.c"
 
 void main() {
   LIST *list = create_list();

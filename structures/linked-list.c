@@ -1,9 +1,7 @@
-#ifndef NULL
+#include "linked-list.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#endif
-
-#include "linked-list.h"
 
 LIST *create_list() {
   LIST *list = (LIST *)malloc(sizeof(LIST));

@@ -1,4 +1,4 @@
-#include "util/hashing.c"
+#include "../structures/hashing.c"
 
 char *create_name(char *str) {
   char *name = (char *)malloc(sizeof(char) * (strlen(str) + 1));

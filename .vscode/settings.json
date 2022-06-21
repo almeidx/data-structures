@@ -20,7 +20,9 @@
     "generic-list-test.h": "c",
     "vehicle.h": "c",
     "type_traits": "c",
-    "generic-list.h": "c"
+    "generic-list.h": "c",
+    "tree.h": "c",
+    "math.h": "c"
   },
-  "cSpell.words": ["inorder"]
+  "cSpell.words": ["arvore", "inorder"]
 }

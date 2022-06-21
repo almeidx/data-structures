@@ -1,4 +1,4 @@
-#include "util/tree.c"
+#include "../structures/tree.c"
 
 #define COUNT 2
 
